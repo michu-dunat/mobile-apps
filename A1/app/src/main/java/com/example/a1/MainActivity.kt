@@ -53,4 +53,9 @@ class MainActivity : AppCompatActivity() {
         super.onRestart()
         Toast.makeText(this, "onRestart", duration).show()
     }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        Toast.makeText(this, "onRestoreInstanceState", duration).show()
+    }
 }
