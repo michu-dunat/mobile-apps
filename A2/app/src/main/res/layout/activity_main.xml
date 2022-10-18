@@ -10,10 +10,9 @@
         android:id="@+id/result"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:text="@string/resultPlaceholderText"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/calculateButton" />
 
@@ -72,8 +71,9 @@
         android:id="@+id/foodQualityRatingBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="63dp"
+        android:layout_marginTop="64dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/customerServiceRatingBar" />
 
@@ -92,7 +92,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="62dp"
         android:layout_marginEnd="63dp"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="8dp"
         android:text="@string/foodQualityRatingBarText"
         app:layout_constraintBottom_toTopOf="@+id/foodQualityRatingBar"
         app:layout_constraintEnd_toEndOf="@+id/maxTipValueEditText"
