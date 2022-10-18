@@ -12,28 +12,38 @@ class MainActivity : AppCompatActivity() {
     lateinit var initialReceiptValueInput: EditText
     lateinit var maxTipValueInput: EditText
     lateinit var textResult: TextView
-    lateinit var ratingBar: RatingBar
+    lateinit var customerServiceRatingInput: RatingBar
+    lateinit var foodQualityRatingInput: RatingBar
     var TAG: String = "A2"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        initialReceiptValueInput = findViewById(R.id.initialReceiptValueEditText)
+        maxTipValueInput = findViewById(R.id.maxTipValueEditText)
+        textResult = findViewById(R.id.result)
+        customerServiceRatingInput = findViewById(R.id.customerServiceRatingBar)
+        foodQualityRatingInput = findViewById(R.id.foodQualityRatingBar)
         Log.i(TAG, "App started running")
     }
 
     fun calculateAndSetTotalValue(view: View?) {
-        initialReceiptValueInput = findViewById(R.id.initialReceiptValueEditText)
-        maxTipValueInput = findViewById(R.id.maxTipValueEditText)
-        textResult = findViewById(R.id.result)
-        ratingBar = findViewById(R.id.ratingBar)
         val initialReceiptValueText = initialReceiptValueInput.text.toString()
         val maxTipValueText = maxTipValueInput.text.toString()
         if (validateInputFields(initialReceiptValueText, maxTipValueText)) return
         val num1 = initialReceiptValueText.toDouble()
         val num2 = maxTipValueText.toDouble()
-        val ratingValue = ratingBar.rating.toDouble() / ratingBar.numStars
-        val result: Double = calculateTotalValue(num1, num2, ratingValue)
+        val overallRatingValue = calculateTotalRatingValue()
+        val result: Double = calculateTotalValue(num1, num2, overallRatingValue)
         displayResult(result)
+    }
+
+    private fun calculateTotalRatingValue(): Double {
+        val customerServiceRatingValue =
+            customerServiceRatingInput.rating.toDouble() / customerServiceRatingInput.numStars
+        val foodQualityRatingValue =
+            foodQualityRatingInput.rating.toDouble() / foodQualityRatingInput.numStars
+        return (customerServiceRatingValue + foodQualityRatingValue) / 2
     }
 
     private fun displayResult(result: Double) {

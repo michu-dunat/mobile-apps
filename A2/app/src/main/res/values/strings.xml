@@ -4,4 +4,6 @@
     <string name="resultPlaceholderText">Całkowita kwota do zapłaty:</string>
     <string name="initialReceiptValueHint">Koszt jedzenia</string>
     <string name="maxTipValueHint">Maksymalny napwiek (%)</string>
+    <string name="customerServiceRatingBarText">Jakość obsługi</string>
+    <string name="foodQualityRatingBarText">Jakość jedzenia</string>
 </resources>
