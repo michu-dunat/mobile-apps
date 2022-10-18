@@ -1,10 +1,7 @@
 <resources>
     <string name="app_name">A2</string>
-    <string name="divideButtonText">/</string>
-    <string name="multiplyButtonText">*</string>
-    <string name="minusButtonText">-</string>
-    <string name="plusButtonText">+</string>
-    <string name="resultDefaultText">Result will be presented here!</string>
-    <string name="firstInputHint">Pierwsza liczba</string>
-    <string name="secondInputHint">Druga liczba</string>
+    <string name="plusButtonText">Oblicz</string>
+    <string name="resultDefaultText">Całkowita kwota do zapłaty:</string>
+    <string name="firstInputHint">Wstępna kwota do zapłaty</string>
+    <string name="secondInputHint">Maksymalny napwiek (%)</string>
 </resources>

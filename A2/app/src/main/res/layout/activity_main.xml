@@ -10,17 +10,18 @@
         android:id="@+id/result"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        android:layout_marginEnd="7dp"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="16dp"
         android:text="@string/resultDefaultText"
-        app:layout_constraintEnd_toEndOf="@+id/divideButton"
-        app:layout_constraintTop_toBottomOf="@+id/multiplyButton" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/plusButton" />
 
     <EditText
         android:id="@+id/editTextNumberDecimal1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:autofillHints=""
         android:ems="10"
         android:hint="@string/firstInputHint"
         android:inputType="numberDecimal"
@@ -28,69 +29,41 @@
         android:textColorHint="#757575"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:autofillHints="" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/editTextNumberDecimal2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:autofillHints=""
         android:ems="10"
         android:hint="@string/secondInputHint"
         android:inputType="numberDecimal"
         android:minHeight="48dp"
         android:textColorHint="#757575"
         app:layout_constraintStart_toStartOf="@+id/editTextNumberDecimal1"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNumberDecimal1"
-        android:autofillHints="" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextNumberDecimal1" />
 
     <Button
         android:id="@+id/plusButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="28dp"
-        android:onClick="calculate"
+        android:layout_marginStart="160dp"
+        android:layout_marginTop="14dp"
+        android:onClick="calculateAndSetTotalValue"
         android:text="@string/plusButtonText"
-        app:layout_constraintBaseline_toBaselineOf="@+id/minusButton"
-        app:layout_constraintEnd_toStartOf="@+id/minusButton"
         app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
 
-    <Button
-        android:id="@+id/minusButton"
+    <RatingBar
+        android:id="@+id/ratingBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
-        android:layout_marginEnd="7dp"
-        android:onClick="calculate"
-        android:text="@string/minusButtonText"
+        android:layout_marginTop="21dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/plusButton"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextNumberDecimal2" />
-
-    <Button
-        android:id="@+id/multiplyButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="28dp"
-        android:onClick="calculate"
-        android:text="@string/multiplyButtonText"
-        app:layout_constraintBaseline_toBaselineOf="@+id/divideButton"
-        app:layout_constraintEnd_toStartOf="@+id/divideButton"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/divideButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
-        android:layout_marginEnd="7dp"
-        android:onClick="calculate"
-        android:text="@string/divideButtonText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/multiplyButton"
-        app:layout_constraintTop_toBottomOf="@+id/minusButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
