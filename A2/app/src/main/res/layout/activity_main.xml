@@ -10,20 +10,20 @@
         android:id="@+id/result"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/resultDefaultText"
+        android:layout_marginStart="116dp"
+        android:layout_marginTop="28dp"
+        android:text="@string/resultPlaceholderText"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/plusButton" />
+        app:layout_constraintTop_toBottomOf="@+id/calculateButton" />
 
     <EditText
-        android:id="@+id/editTextNumberDecimal1"
+        android:id="@+id/initialReceiptValueEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:autofillHints=""
         android:ems="10"
-        android:hint="@string/firstInputHint"
+        android:hint="@string/initialReceiptValueHint"
         android:inputType="numberDecimal"
         android:minHeight="48dp"
         android:textColorHint="#757575"
@@ -32,27 +32,27 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editTextNumberDecimal2"
+        android:id="@+id/maxTipValueEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:autofillHints=""
         android:ems="10"
-        android:hint="@string/secondInputHint"
+        android:hint="@string/maxTipValueHint"
         android:inputType="numberDecimal"
         android:minHeight="48dp"
         android:textColorHint="#757575"
-        app:layout_constraintStart_toStartOf="@+id/editTextNumberDecimal1"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNumberDecimal1" />
+        app:layout_constraintStart_toStartOf="@+id/initialReceiptValueEditText"
+        app:layout_constraintTop_toBottomOf="@+id/initialReceiptValueEditText" />
 
     <Button
-        android:id="@+id/plusButton"
+        android:id="@+id/calculateButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="160dp"
         android:layout_marginTop="14dp"
         android:onClick="calculateAndSetTotalValue"
-        android:text="@string/plusButtonText"
+        android:text="@string/calculateButtonText"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
@@ -64,6 +64,6 @@
         android:layout_marginTop="21dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNumberDecimal2" />
+        app:layout_constraintTop_toBottomOf="@+id/maxTipValueEditText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

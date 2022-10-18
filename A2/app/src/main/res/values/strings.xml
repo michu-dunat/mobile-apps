@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">A2</string>
-    <string name="plusButtonText">Oblicz</string>
-    <string name="resultDefaultText">Całkowita kwota do zapłaty:</string>
-    <string name="firstInputHint">Wstępna kwota do zapłaty</string>
-    <string name="secondInputHint">Maksymalny napwiek (%)</string>
+    <string name="calculateButtonText">Oblicz</string>
+    <string name="resultPlaceholderText">Całkowita kwota do zapłaty:</string>
+    <string name="initialReceiptValueHint">Koszt jedzenia</string>
+    <string name="maxTipValueHint">Maksymalny napwiek (%)</string>
 </resources>
