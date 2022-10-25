@@ -7,33 +7,37 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
-    lateinit var textView: TextView
+    lateinit var textViewInput: TextView
+    lateinit var textViewHistory: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        textView = findViewById(R.id.textView)
+        textViewInput = findViewById(R.id.textViewInput)
+        textViewHistory = findViewById(R.id.textViewHistory)
     }
 
     fun input(view: View) {
         if (view.id == R.id.buttonClear) {
-            textView.text = ""
+            textViewInput.text = ""
             return
         }
 
-        if (isSignButton(view) && (isSignAlreadyInInput() || textView.text.isEmpty())) return
+        if (isSignButton(view) && (isSignAlreadyInInput() || textViewInput.text.isEmpty())) return
 
-        if(textView.text.toString().contains('=')) {
-            textView.text = ""
+        if(textViewInput.text.toString().contains('=')) {
+            textViewHistory.text = textViewHistory.text.toString().plus("\n").plus(textViewInput.text)
+            textViewInput.text = ""
+
         }
 
-        if(view.id == R.id.buttonResult && textView.text.toString().isNotEmpty() && isSignAlreadyInInput()) {
+        if(view.id == R.id.buttonResult && textViewInput.text.toString().isNotEmpty() && isSignAlreadyInInput()) {
             calculate()
             return
         }
 
         val button: Button = view as Button
-        textView.text = textView.text.toString().plus(button.text)
+        textViewInput.text = textViewInput.text.toString().plus(button.text)
     }
 
     private fun isSignButton(view: View) =
@@ -41,23 +45,23 @@ class MainActivity : AppCompatActivity() {
                 view.id == R.id.buttonStar || view.id == R.id.buttonSlash)
 
     private fun isSignAlreadyInInput(): Boolean {
-        return textView.text.contains('+') || textView.text.contains('-') ||
-                textView.text.contains('*') || textView.text.contains('/')
+        return textViewInput.text.contains('+') || textViewInput.text.contains('-') ||
+                textViewInput.text.contains('*') || textViewInput.text.contains('/')
     }
 
     private fun calculate() {
-        val index: Int = textView.text.indexOfAny(charArrayOf('+', '-', '*', '/'))
-        val firstNumber: Int = textView.text.subSequence(0, index).toString().toInt()
-        val secondNumber: Int = textView.text.subSequence(index + 1, textView.text.length).toString().toInt()
-        if (textView.text[index] == '+') {
+        val index: Int = textViewInput.text.indexOfAny(charArrayOf('+', '-', '*', '/'))
+        val firstNumber: Int = textViewInput.text.subSequence(0, index).toString().toInt()
+        val secondNumber: Int = textViewInput.text.subSequence(index + 1, textViewInput.text.length).toString().toInt()
+        if (textViewInput.text[index] == '+') {
             setResultInText(firstNumber + secondNumber)
-        } else if (textView.text[index] == '-') {
+        } else if (textViewInput.text[index] == '-') {
             setResultInText(firstNumber - secondNumber)
-        } else if (textView.text[index] == '*') {
+        } else if (textViewInput.text[index] == '*') {
             setResultInText(firstNumber * secondNumber)
-        } else if (textView.text[index] == '/') {
+        } else if (textViewInput.text[index] == '/') {
             if(secondNumber == 0) {
-                textView.text = ""
+                textViewInput.text = ""
                 return
             }
             setResultInText(firstNumber / secondNumber)
@@ -65,6 +69,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setResultInText(result: Int) {
-        textView.text = textView.text.toString().plus("=").plus(result)
+        textViewInput.text = textViewInput.text.toString().plus("=").plus(result)
     }
 }
