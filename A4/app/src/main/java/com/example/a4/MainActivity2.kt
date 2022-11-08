@@ -8,27 +8,32 @@ import androidx.appcompat.app.AppCompatActivity
 
 
 class MainActivity2 : AppCompatActivity() {
-    lateinit var textView1: TextView
-    lateinit var textView2: TextView
+    lateinit var textViewNumber: TextView
+    lateinit var textViewFirstAndLastName: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main2)
-        textView1 = findViewById(R.id.textView)
-        textView2 = findViewById(R.id.textView2)
+        textViewNumber = findViewById(R.id.textView)
+        textViewFirstAndLastName = findViewById(R.id.textView2)
         val myLocalIntent = intent
         val myBundle = myLocalIntent.extras
         val str1 = myBundle!!.getString("val1")
-        val str2 = myBundle.getString("val2")
-        textView1.text =str1
-        textView2.text =str2
-        val result = str1.plus(str2)
+        textViewNumber.text = "Indeks: ".plus(str1)
+        var result: String
+        if (str1 == "248862") {
+            result = "Michał Dunat, proponowana ocena: 5"
+            textViewFirstAndLastName.text = "Michał Dunat"
+        } else {
+            result = "Nie rozpoznano studenta"
+            textViewFirstAndLastName.text = result
+        }
         myBundle.putString("result", result)
         myLocalIntent.putExtras(myBundle)
         setResult(Activity.RESULT_OK, myLocalIntent)
     }
 
-    fun exit(view: View){
+    fun exit(view: View) {
         finish()
     }
 
