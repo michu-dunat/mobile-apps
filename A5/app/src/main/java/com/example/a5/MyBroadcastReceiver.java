@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.widget.Toast;
 
 public class MyBroadcastReceiver extends BroadcastReceiver {
-    private static final String ABORT_PHONE_NUMBER = "+48666606362";
+    private static final String ABORT_PHONE_NUMBER = "";
 
     @Override
     public void onReceive(Context context, Intent intent) {
