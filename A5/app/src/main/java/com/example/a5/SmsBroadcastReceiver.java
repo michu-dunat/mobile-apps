@@ -1,6 +1,5 @@
 package com.example.a5;
 
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -15,8 +14,7 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (intent.getAction().
-                equals(SmsBroadcastReceiver.SMS_REC_ACTION)) {
+        if (intent.getAction().equals(SmsBroadcastReceiver.SMS_REC_ACTION)) {
             StringBuilder sb = new StringBuilder();
             Bundle bundle = intent.getExtras();
             String numberToRespond = null;
@@ -27,15 +25,21 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
                     SmsMessage smsMessage =
                             SmsMessage.createFromPdu
                                     ((byte[]) pdu);
-                    sb.append("body - " + smsMessage.
-                            getDisplayMessageBody());
+                    sb.append(smsMessage.getDisplayMessageBody());
                     numberToRespond = smsMessage.getDisplayOriginatingAddress();
                 }
             }
-            Toast.makeText(context, "SMS RECEIVED - "
-                    + sb.toString(), Toast.LENGTH_LONG).show();
-            SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendTextMessage(numberToRespond, null, "Michał Dunat", null, null);
+            if (sb.toString().startsWith("PILNE")) {
+                Toast.makeText(context, sb.toString(), Toast.LENGTH_LONG).show();
+            }
+            try {
+                int number = Integer.parseInt(sb.toString());
+                if (number < 10) {
+                    SmsManager smsManager = SmsManager.getDefault();
+                    smsManager.sendTextMessage(numberToRespond, null, String.valueOf(number + 1), null, null);
+                }
+            } catch (Exception ignored) {
+            }
         }
     }
 }
