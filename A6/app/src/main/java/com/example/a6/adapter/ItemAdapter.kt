@@ -9,8 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.a6.MyDBHandler
 import com.example.a6.R
 
-class ItemAdapter(private val context: Context, private val dataSet: ArrayList<String>) : RecyclerView.Adapter<ItemAdapter.ItemViewHolder>(){
-
+class ItemAdapter(private val context: Context, private val dataSet: ArrayList<String>) :
+    RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
 
     class ItemViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         val textView: TextView = view.findViewById(R.id.textView)
@@ -19,14 +19,15 @@ class ItemAdapter(private val context: Context, private val dataSet: ArrayList<S
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val adapterLayout = LayoutInflater.from(parent.context)
             .inflate(R.layout.text_row_item, parent, false)
-
         return ItemViewHolder(adapterLayout)
     }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val dbHandler = MyDBHandler(context, null, null, 1)
         val item = dbHandler.findProduct(position)
-        holder.textView.text =  item.toString()
+        if(item != null){
+            holder.textView.text = item.toString()
+        }
     }
 
     override fun getItemCount(): Int {

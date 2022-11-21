@@ -10,13 +10,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.a6.adapter.ItemAdapter
 
 class MainActivity : AppCompatActivity() {
-    lateinit var nameET : EditText
-    lateinit var quantityET : EditText
-    lateinit var addBTN : Button
-    lateinit var findBTN : Button
-    lateinit var deleteBTN : Button
-    lateinit var outputTV : TextView
-    lateinit var productsRV : RecyclerView
+    private lateinit var nameET: EditText
+    private lateinit var quantityET: EditText
+    private lateinit var addBTN: Button
+    private lateinit var findBTN: Button
+    private lateinit var deleteBTN: Button
+    private lateinit var outputTV: TextView
+    private lateinit var productsRV: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,34 +30,24 @@ class MainActivity : AppCompatActivity() {
         outputTV = findViewById(R.id.output)
 
         val dbHandler = MyDBHandler(this, null, null, 1)
-        var myDataset = dbHandler.getAllProducts()
-
-        val recyclerView = findViewById<RecyclerView>(R.id.products)
-        recyclerView.adapter = myDataset?.let { ItemAdapter(this, it) }
+        val myDataset = dbHandler.getAllProducts()
+        productsRV = findViewById(R.id.products)
+        productsRV.adapter = myDataset?.let { ItemAdapter(this, it) }
 
     }
 
     fun newProduct(view: View) {
         val dbHandler = MyDBHandler(this, null, null, 1)
-
         val quantity = Integer.parseInt(quantityET.text.toString())
-
         val product = Product(nameET.text.toString(), quantity)
-
         dbHandler.addProduct(product)
         nameET.setText("")
         quantityET.setText("")
-
-        println(dbHandler.getProductCount())
-
     }
 
     fun lookupProduct(view: View) {
         val dbHandler = MyDBHandler(this, null, null, 1)
-
-        val product = dbHandler.findProduct(
-            nameET.text.toString())
-
+        val product = dbHandler.findProduct(nameET.text.toString())
         if (product != null) {
             outputTV.text = product.toString()
         } else {
@@ -67,9 +57,7 @@ class MainActivity : AppCompatActivity() {
 
     fun removeProduct(view: View) {
         val dbHandler = MyDBHandler(this, null, null, 1)
-
         val result = dbHandler.deleteProduct(nameET.text.toString())
-
         if (result) {
             outputTV.text = "Record Deleted"
             nameET.setText("")
