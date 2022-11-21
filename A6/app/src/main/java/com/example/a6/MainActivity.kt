@@ -6,6 +6,8 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import com.example.a6.adapter.ItemAdapter
 
 class MainActivity : AppCompatActivity() {
     lateinit var nameET : EditText
@@ -14,6 +16,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var findBTN : Button
     lateinit var deleteBTN : Button
     lateinit var outputTV : TextView
+    lateinit var productsRV : RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,6 +28,12 @@ class MainActivity : AppCompatActivity() {
         findBTN = findViewById(R.id.find)
         deleteBTN = findViewById(R.id.delete)
         outputTV = findViewById(R.id.output)
+
+        val dbHandler = MyDBHandler(this, null, null, 1)
+        var myDataset = dbHandler.getAllProducts()
+
+        val recyclerView = findViewById<RecyclerView>(R.id.products)
+        recyclerView.adapter = myDataset?.let { ItemAdapter(this, it) }
 
     }
 
@@ -38,6 +47,9 @@ class MainActivity : AppCompatActivity() {
         dbHandler.addProduct(product)
         nameET.setText("")
         quantityET.setText("")
+
+        println(dbHandler.getProductCount())
+
     }
 
     fun lookupProduct(view: View) {

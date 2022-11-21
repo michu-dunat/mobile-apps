@@ -1,9 +1,9 @@
 package com.example.a6
 
 import android.content.ContentValues
+import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.content.Context
 
 class MyDBHandler(
     context: Context, name: String?,
@@ -76,6 +76,61 @@ class MyDBHandler(
         return product
     }
 
+    fun findProduct(id: Int): Product? {
+        val query =
+            "SELECT * FROM $TABLE_PRODUCTS WHERE $COLUMN_ID =  \"$id\""
+
+        val db = this.writableDatabase
+
+        val cursor = db.rawQuery(query, null)
+
+        var product: Product? = null
+
+        if (cursor.moveToFirst()) {
+            cursor.moveToFirst()
+
+            val id = Integer.parseInt(cursor.getString(0))
+            val name = cursor.getString(1)
+            val quantity = Integer.parseInt(cursor.getString(2))
+            product = Product(id, name, quantity)
+            cursor.close()
+        }
+
+        db.close()
+        return product
+    }
+
+    fun getAllProducts(): ArrayList<String>? {
+        val query =
+            "SELECT * FROM $TABLE_PRODUCTS"
+
+        val db = this.writableDatabase
+
+        val cursor = db.rawQuery(query, null)
+
+        var products = ArrayList<String>()
+        var product: Product? = null
+
+        if (cursor.moveToFirst()) {
+            cursor.moveToFirst()
+            while (!cursor.isAfterLast) {
+                val id = Integer.parseInt(cursor.getString(0))
+                val name = cursor.getString(1)
+                val quantity = Integer.parseInt(cursor.getString(2))
+                product = Product(id, name, quantity)
+                products.add(product.toString())
+                cursor.moveToNext()
+            }
+
+
+
+            cursor.close()
+        }
+
+        db.close()
+        return products
+    }
+
     fun deleteProduct(name: String): Boolean {
 
         var result = false
@@ -98,5 +153,21 @@ class MyDBHandler(
         }
         db.close()
         return result
+    }
+
+    fun getProductCount(): Int {
+        var numberOfProducts = 0
+        val db = this.readableDatabase
+        val query = "SELECT COUNT($COLUMN_ID) FROM $TABLE_PRODUCTS"
+
+        val cursor = db.rawQuery(query, null)
+
+        if (cursor.moveToFirst()) {
+            numberOfProducts = Integer.parseInt(cursor.getString(0))
+            cursor.close()
+        }
+
+        db.close()
+        return numberOfProducts
     }
 }
