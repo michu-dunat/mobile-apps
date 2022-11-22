@@ -99,6 +99,9 @@ class MyDBHandler(
     }
 
     fun deleteMajor(majorId: Int) {
+        if(majorId > getLastIndex()) {
+            return
+        }
         val query = "DELETE FROM $TABLE_MAJORS WHERE $COLUMN_ID = \"$majorId\""
         val db = this.writableDatabase
         db.execSQL(query)
