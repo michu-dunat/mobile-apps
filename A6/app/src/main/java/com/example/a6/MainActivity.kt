@@ -5,7 +5,6 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.a6.adapter.ItemAdapter
@@ -20,7 +19,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var outputTV: TextView
     private lateinit var majorsRV: RecyclerView
 
-    private lateinit var dbHandler : MyDBHandler
+    private lateinit var dbHandler: MyDBHandler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,18 +36,9 @@ class MainActivity : AppCompatActivity() {
 
         dbHandler = MyDBHandler(this, null, null, 1)
         val majors = dbHandler.findAllMajors()
-        majorsRV.adapter = ItemAdapter(this, majors, ItemAdapter.OnClickListener {major ->
-            Toast.makeText(this@MainActivity, major, Toast.LENGTH_SHORT).show()
+        majorsRV.adapter = ItemAdapter(this, majors, ItemAdapter.OnClickListener { major ->
             fillEditTexts(major)
         })
-
-        }
-
-    private fun fillEditTexts(major: String) {
-        val parts = major.split(",")
-        majorIdET.setText(parts[0].split("=")[1])
-        nameET.setText(parts[1].split("=")[1])
-        specialtyET.setText(parts[2].split("=")[1].removeSuffix(")"))
     }
 
     fun addMajor(view: View) {
@@ -59,7 +49,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun editMajor(view: View) {
-        val major = Major(Integer.parseInt(majorIdET.text.toString()), nameET.text.toString(), specialtyET.text.toString())
+        val major = Major(
+            Integer.parseInt(majorIdET.text.toString()),
+            nameET.text.toString(),
+            specialtyET.text.toString()
+        )
         outputTV.text = dbHandler.editMajor(major)
         cleanInputFields()
         majorsRV.adapter?.notifyDataSetChanged()
@@ -69,6 +63,13 @@ class MainActivity : AppCompatActivity() {
         dbHandler.deleteMajor(Integer.parseInt(majorIdET.text.toString()))
         cleanInputFields()
         majorsRV.adapter?.notifyDataSetChanged()
+    }
+
+    private fun fillEditTexts(major: String) {
+        val parts = major.split(",")
+        majorIdET.setText(parts[0].split("=")[1])
+        nameET.setText(parts[1].split("=")[1])
+        specialtyET.setText(parts[2].split("=")[1].removeSuffix(")"))
     }
 
     private fun cleanInputFields() {

@@ -61,7 +61,8 @@ class MyDBHandler(
         if (major.name!!.lowercase(Locale.ROOT) == "name") {
             return "Forbidden name";
         }
-        val query = "UPDATE $TABLE_MAJORS SET $COLUMN_NAME = \"${major.name}\", $COLUMN_SPECIALTY = \"${major.specialty}\" WHERE $COLUMN_ID = \"${major.id}\""
+        val query =
+            "UPDATE $TABLE_MAJORS SET $COLUMN_NAME = \"${major.name}\", $COLUMN_SPECIALTY = \"${major.specialty}\" WHERE $COLUMN_ID = \"${major.id}\""
         println(query)
         val db = this.writableDatabase
         try {

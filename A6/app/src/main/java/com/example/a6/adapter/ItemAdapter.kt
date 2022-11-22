@@ -6,11 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.a6.Major
 import com.example.a6.MyDBHandler
 import com.example.a6.R
 
-class ItemAdapter(private val context: Context, private val dataSet: ArrayList<String>, private val onClickListener: OnClickListener) :
+class ItemAdapter(
+    private val context: Context,
+    private val dataSet: ArrayList<String>,
+    private val onClickListener: OnClickListener
+) :
     RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
 
     class ItemViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
