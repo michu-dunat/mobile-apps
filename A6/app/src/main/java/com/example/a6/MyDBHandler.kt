@@ -20,6 +20,9 @@ class MyDBHandler(
                 + COLUMN_SPECIALTY + " TEXT" +
                 ")")
         db.execSQL(CREATE_MAJORS_TABLE)
+        db.execSQL("INSERT INTO $TABLE_MAJORS ($COLUMN_NAME, $COLUMN_SPECIALTY) VALUES (\"Informatyka techniczna\",\"INS;ISK;IGM;IMT\")")
+        db.execSQL("INSERT INTO $TABLE_MAJORS ($COLUMN_NAME, $COLUMN_SPECIALTY) VALUES (\"Teleinformatyka\",\"PST;UST\")")
+        db.execSQL("INSERT INTO $TABLE_MAJORS ($COLUMN_NAME, $COLUMN_SPECIALTY) VALUES (\"Informatyka stosowana\",\"IO;PSI;ZSTI\")")
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {

@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
         val parts = major.split(",")
         majorIdET.setText(parts[0].split("=")[1])
         nameET.setText(parts[1].split("=")[1])
-        specialtyET.setText(parts[2].split("=")[1])
+        specialtyET.setText(parts[2].split("=")[1].removeSuffix(")"))
     }
 
     fun addMajor(view: View) {
