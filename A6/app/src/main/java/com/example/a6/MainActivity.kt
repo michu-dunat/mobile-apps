@@ -18,6 +18,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var outputTV: TextView
     private lateinit var productsRV: RecyclerView
 
+    private lateinit var dbHandler : MyDBHandler
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -28,25 +30,23 @@ class MainActivity : AppCompatActivity() {
         findBTN = findViewById(R.id.find)
         deleteBTN = findViewById(R.id.delete)
         outputTV = findViewById(R.id.output)
-
-        val dbHandler = MyDBHandler(this, null, null, 1)
-        val myDataset = dbHandler.getAllProducts()
         productsRV = findViewById(R.id.products)
-        productsRV.adapter = myDataset?.let { ItemAdapter(this, it) }
 
-    }
+        dbHandler = MyDBHandler(this, null, null, 1)
+        val products = dbHandler.findAllProducts()
+        productsRV.adapter = ItemAdapter(this, products)
+        }
 
     fun newProduct(view: View) {
-        val dbHandler = MyDBHandler(this, null, null, 1)
         val quantity = Integer.parseInt(quantityET.text.toString())
         val product = Product(nameET.text.toString(), quantity)
         dbHandler.addProduct(product)
         nameET.setText("")
         quantityET.setText("")
+        productsRV.adapter?.notifyDataSetChanged()
     }
 
     fun lookupProduct(view: View) {
-        val dbHandler = MyDBHandler(this, null, null, 1)
         val product = dbHandler.findProduct(nameET.text.toString())
         if (product != null) {
             outputTV.text = product.toString()
@@ -56,13 +56,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun removeProduct(view: View) {
-        val dbHandler = MyDBHandler(this, null, null, 1)
-        val result = dbHandler.deleteProduct(nameET.text.toString())
-        if (result) {
-            outputTV.text = "Record Deleted"
-            nameET.setText("")
-            quantityET.setText("")
-        } else
-            outputTV.text = "No Match Found"
+        dbHandler.deleteProduct(nameET.text.toString())
+        productsRV.adapter?.notifyDataSetChanged()
+        nameET.setText("")
+        quantityET.setText("")
     }
 }

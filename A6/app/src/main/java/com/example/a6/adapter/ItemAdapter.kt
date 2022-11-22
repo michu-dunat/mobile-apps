@@ -24,14 +24,12 @@ class ItemAdapter(private val context: Context, private val dataSet: ArrayList<S
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val dbHandler = MyDBHandler(context, null, null, 1)
-        val item = dbHandler.findProduct(position)
-        if(item != null){
-            holder.textView.text = item.toString()
-        }
+        val items = dbHandler.findAllProducts()
+        holder.textView.text = items[position]
     }
 
     override fun getItemCount(): Int {
         val dbHandler = MyDBHandler(context, null, null, 1)
-        return dbHandler.getProductCount()
+        return dbHandler.findAllProducts().size
     }
 }
