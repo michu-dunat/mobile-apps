@@ -14,35 +14,35 @@ class MyDBHandler(
     SQLiteOpenHelper(context, DATABASE_NAME, factory, DATABASE_VERSION) {
 
     override fun onCreate(db: SQLiteDatabase) {
-        val CREATE_PRODUCTS_TABLE = ("CREATE TABLE " + TABLE_PRODUCTS + "("
+        val CREATE_MAJORS_TABLE = ("CREATE TABLE " + TABLE_MAJORS + "("
                 + COLUMN_ID + " INTEGER PRIMARY KEY,"
                 + COLUMN_NAME + " TEXT UNIQUE,"
-                + COLUMN_QUANTITY + " INTEGER" +
+                + COLUMN_SPECIALTY + " TEXT" +
                 ")")
-        db.execSQL(CREATE_PRODUCTS_TABLE)
+        db.execSQL(CREATE_MAJORS_TABLE)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        db.execSQL("DROP TABLE IF EXISTS $TABLE_PRODUCTS")
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_MAJORS")
         onCreate(db)
     }
 
     companion object {
         private val DATABASE_VERSION = 1
         private val DATABASE_NAME = "productDB.db"
-        val TABLE_PRODUCTS = "products"
+        val TABLE_MAJORS = "majors"
 
         val COLUMN_ID = "_id"
         val COLUMN_NAME = "name"
-        val COLUMN_QUANTITY = "quantity"
+        val COLUMN_SPECIALTY = "specialty"
     }
 
-    fun addProduct(product: Product): String {
-        if (product.name!!.lowercase(Locale.ROOT) == "name") {
+    fun addMajor(major: Major): String {
+        if (major.name!!.lowercase(Locale.ROOT) == "name") {
             return "Forbidden name";
         }
         val query =
-            "INSERT INTO $TABLE_PRODUCTS ($COLUMN_NAME, $COLUMN_QUANTITY) VALUES (\"${product.name}\",\"${product.quantity}\")"
+            "INSERT INTO $TABLE_MAJORS ($COLUMN_NAME, $COLUMN_SPECIALTY) VALUES (\"${major.name}\",\"${major.specialty}\")"
         val db = this.writableDatabase
         try {
             db.execSQL(query)
@@ -54,49 +54,45 @@ class MyDBHandler(
         return "Product added"
     }
 
-    fun findProduct(name: String): Product? {
-        if (name.lowercase(Locale.ROOT) == "name")
-            return null
-        val query = "SELECT * FROM $TABLE_PRODUCTS WHERE $COLUMN_NAME =  \"$name\""
-        val db = this.readableDatabase
-        val cursor = db.rawQuery(query, null)
-        var product: Product? = null
-        if (cursor.moveToFirst()) {
-            product = Product(
-                Integer.parseInt(cursor.getString(0)),
-                cursor.getString(1),
-                Integer.parseInt(cursor.getString(2))
-            )
-            cursor.close()
+    fun editMajor(major: Major): String {
+        if (major.name!!.lowercase(Locale.ROOT) == "name") {
+            return "Forbidden name";
+        }
+        val query = "UPDATE $TABLE_MAJORS SET $COLUMN_NAME = \"${major.name}\", $COLUMN_SPECIALTY = \"${major.specialty}\" WHERE $COLUMN_ID = ${major.id}"
+        println(query)
+        val db = this.writableDatabase
+        try {
+            db.execSQL(query)
+        } catch (exception: SQLiteConstraintException) {
+            db.close()
+            return "Error while updating"
         }
         db.close()
-        return product
+        return "Updated successfully";
     }
 
-    fun findAllProducts(): ArrayList<String> {
-        val query = "SELECT * FROM $TABLE_PRODUCTS"
+    fun findAllMajors(): ArrayList<String> {
+        val query = "SELECT * FROM $TABLE_MAJORS"
         val db = this.readableDatabase
         val cursor = db.rawQuery(query, null)
-        val products = ArrayList<String>()
+        val majors = ArrayList<String>()
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast) {
                 val id = Integer.parseInt(cursor.getString(0))
                 val name = cursor.getString(1)
-                val quantity = Integer.parseInt(cursor.getString(2))
-                val product = Product(id, name, quantity)
-                products.add(product.toString())
+                val specialty = cursor.getString(2)
+                val major = Major(id, name, specialty)
+                majors.add(major.toString())
                 cursor.moveToNext()
             }
             cursor.close()
         }
         db.close()
-        return products
+        return majors
     }
 
-    fun deleteProduct(name: String) {
-        if (name.lowercase(Locale.ROOT) == "name")
-            return
-        val query = "DELETE FROM $TABLE_PRODUCTS WHERE $COLUMN_NAME = \"$name\""
+    fun deleteMajor(majorId: Int) {
+        val query = "DELETE FROM $TABLE_MAJORS WHERE $COLUMN_ID = \"$majorId\""
         val db = this.writableDatabase
         db.execSQL(query)
         db.close()

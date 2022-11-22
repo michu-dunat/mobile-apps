@@ -6,10 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.a6.Major
 import com.example.a6.MyDBHandler
 import com.example.a6.R
 
-class ItemAdapter(private val context: Context, private val dataSet: ArrayList<String>) :
+class ItemAdapter(private val context: Context, private val dataSet: ArrayList<String>, private val onClickListener: OnClickListener) :
     RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
 
     class ItemViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
@@ -24,12 +25,19 @@ class ItemAdapter(private val context: Context, private val dataSet: ArrayList<S
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val dbHandler = MyDBHandler(context, null, null, 1)
-        val items = dbHandler.findAllProducts()
+        val items = dbHandler.findAllMajors()
         holder.textView.text = items[position]
+        holder.itemView.setOnClickListener {
+            onClickListener.onClick(items[position])
+        }
     }
 
     override fun getItemCount(): Int {
         val dbHandler = MyDBHandler(context, null, null, 1)
-        return dbHandler.findAllProducts().size
+        return dbHandler.findAllMajors().size
+    }
+
+    class OnClickListener(val clickListener: (major: String) -> Unit) {
+        fun onClick(major: String) = clickListener(major)
     }
 }
