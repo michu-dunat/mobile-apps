@@ -1,6 +1,7 @@
 package com.example.a6
 
 import android.content.Context
+import android.database.sqlite.SQLiteBindOrColumnIndexOutOfRangeException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.database.sqlite.SQLiteConstraintException
@@ -58,16 +59,18 @@ class MyDBHandler(
     }
 
     fun editMajor(major: Major): String {
+        if(major.id > getLastIndex()) {
+            return "Index out of bound"
+        }
         if (major.name!!.lowercase(Locale.ROOT) == "name") {
             return "Forbidden name";
         }
         val query =
             "UPDATE $TABLE_MAJORS SET $COLUMN_NAME = \"${major.name}\", $COLUMN_SPECIALTY = \"${major.specialty}\" WHERE $COLUMN_ID = \"${major.id}\""
-        println(query)
         val db = this.writableDatabase
         try {
             db.execSQL(query)
-        } catch (exception: SQLiteConstraintException) {
+        } catch (exception: SQLiteBindOrColumnIndexOutOfRangeException) {
             db.close()
             return "Error while updating"
         }
@@ -100,5 +103,15 @@ class MyDBHandler(
         val db = this.writableDatabase
         db.execSQL(query)
         db.close()
+    }
+
+    private fun getLastIndex(): Int {
+        val db = this.readableDatabase
+        val cursor = db.rawQuery("SELECT MAX($COLUMN_ID) FROM (\"$TABLE_MAJORS\")", null)
+        var index = -1
+        if (cursor.moveToFirst()) {
+            index = Integer.parseInt(cursor.getString(0))
+        }
+        return index;
     }
 }
