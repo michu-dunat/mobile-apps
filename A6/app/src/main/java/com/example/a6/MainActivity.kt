@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
     fun newProduct(view: View) {
         val quantity = Integer.parseInt(quantityET.text.toString())
         val product = Product(nameET.text.toString(), quantity)
-        dbHandler.addProduct(product)
+        outputTV.text = dbHandler.addProduct(product)
         nameET.setText("")
         quantityET.setText("")
         productsRV.adapter?.notifyDataSetChanged()

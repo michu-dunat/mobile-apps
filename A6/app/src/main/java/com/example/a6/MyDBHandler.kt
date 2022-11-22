@@ -1,9 +1,9 @@
 package com.example.a6
 
-import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.database.sqlite.SQLiteConstraintException
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -16,8 +16,8 @@ class MyDBHandler(
     override fun onCreate(db: SQLiteDatabase) {
         val CREATE_PRODUCTS_TABLE = ("CREATE TABLE " + TABLE_PRODUCTS + "("
                 + COLUMN_ID + " INTEGER PRIMARY KEY,"
-                + COLUMN_NAME + " TEXT,"
-                + COLUMN_QUANTITY + " INTEGER," +
+                + COLUMN_NAME + " TEXT UNIQUE,"
+                + COLUMN_QUANTITY + " INTEGER" +
                 ")")
         db.execSQL(CREATE_PRODUCTS_TABLE)
     }
@@ -37,15 +37,21 @@ class MyDBHandler(
         val COLUMN_QUANTITY = "quantity"
     }
 
-    fun addProduct(product: Product) {
+    fun addProduct(product: Product): String {
         if (product.name!!.lowercase(Locale.ROOT) == "name") {
-            return;
+            return "Forbidden name";
         }
         val query =
             "INSERT INTO $TABLE_PRODUCTS ($COLUMN_NAME, $COLUMN_QUANTITY) VALUES (\"${product.name}\",\"${product.quantity}\")"
         val db = this.writableDatabase
-        db.execSQL(query)
+        try {
+            db.execSQL(query)
+        } catch (exception: SQLiteConstraintException) {
+            db.close()
+            return "Names must be unique"
+        }
         db.close()
+        return "Product added"
     }
 
     fun findProduct(name: String): Product? {
