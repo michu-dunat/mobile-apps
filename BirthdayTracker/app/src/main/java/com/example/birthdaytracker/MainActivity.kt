@@ -5,14 +5,13 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.ContactsContract
-import android.provider.ContactsContract.PhoneLookup
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.room.Room
@@ -79,28 +78,38 @@ class MainActivity : AppCompatActivity() {
     ) {
         if (it.resultCode == Activity.RESULT_OK) {
             val contactUri: Uri? = it.data?.data
-            val projection: Array<String> = arrayOf(ContactsContract.CommonDataKinds.Phone.NUMBER)
+            val projection: Array<String> = arrayOf(
+                ContactsContract.CommonDataKinds.Phone.NUMBER,
+                ContactsContract.Data.DISPLAY_NAME,
+            )
             if (contactUri != null) {
                 contentResolver.query(contactUri, projection, null, null, null).use { cursor ->
                     if (cursor != null) {
                         if (cursor.moveToFirst()) {
-//                            val numberIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
-//                            val number = cursor.getString(numberIndex)
-                            val firstNameIndex =
-                                cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)
-                            val firstName = cursor.getString(firstNameIndex)
-                            println(firstName)
-//                            println(number)
+                            val numberIndex =
+                                cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
+                            val number = cursor.getString(numberIndex)
+                            val nameIndex =
+                                cursor.getColumnIndex(ContactsContract.Data.DISPLAY_NAME)
+                            val name = cursor.getString(nameIndex)
+                            runAddPersonActivityFromImport(number, name)
                         }
+                        cursor.close()
                     }
                 }
             }
-        } else {
         }
     }
 
     fun runAddPersonActivity(view: View?) {
         val intent = Intent(this, AddPersonActivity::class.java)
+        addPersonActivityLauncher.launch(intent)
+    }
+
+    private fun runAddPersonActivityFromImport(number: String, name: String) {
+        val intent = Intent(this, AddPersonActivity::class.java)
+        intent.putExtra("number", number)
+        intent.putExtra("name", name)
         addPersonActivityLauncher.launch(intent)
     }
 
