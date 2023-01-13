@@ -1,30 +1,34 @@
 package com.example.birthdaytracker
 
-import android.Manifest
 import android.app.Activity
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.ContactsContract
-import android.util.Log
-import android.view.View
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.room.Room
 import com.example.birthdaytracker.dao.PersonDao
 import com.example.birthdaytracker.database.Database
+import com.example.birthdaytracker.databinding.ActivityMainBinding
 import kotlinx.coroutines.runBlocking
 
 class MainActivity : AppCompatActivity() {
     private lateinit var personDao: PersonDao
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var toggle: ActionBarDrawerToggle
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        binding.apply {
+            setupNavigationMenu()
+        }
 
         val db = Room.databaseBuilder(
             applicationContext,
@@ -34,43 +38,56 @@ class MainActivity : AppCompatActivity() {
         personDao = db.personDao()
     }
 
-    fun importContact(view: View) {
-        manageReadContactsPermission()
+    private fun ActivityMainBinding.setupNavigationMenu() {
+        toggle = ActionBarDrawerToggle(
+            this@MainActivity,
+            drawerLayout,
+            R.string.open,
+            R.string.close
+        )
+        drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        navView.setNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.addPerson -> {
+                    runAddPersonActivity()
+                }
+                R.id.importPerson -> {
+                    importContact()
+                }
+                R.id.printPeople -> {
+                    printPeopleInConsole()
+                }
+                R.id.clearDatabase -> {
+                    clearDatabase()
+                }
+            }
+            true
+        }
+    }
+
+    private fun runAddPersonActivity() {
+        val intent = Intent(this, AddPersonActivity::class.java)
+        addPersonActivityLauncher.launch(intent)
+    }
+
+    private val addPersonActivityLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        if (it.resultCode == Activity.RESULT_OK) {
+            Toast.makeText(this, "New person was added!", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(this, "New person wasn't added.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun importContact() {
         val intent = Intent(Intent.ACTION_PICK).apply {
             type = ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE
         }
         importContactActivityLauncher.launch(intent)
-    }
-
-    private fun manageReadContactsPermission() {
-        val permission = ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.READ_CONTACTS
-        )
-
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.READ_CONTACTS),
-                1
-            )
-        }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>, grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            1 -> {
-                if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    Log.i("TAG", "Permission has been denied by user")
-                } else {
-                    Log.i("TAG", "Permission has been granted by user")
-                }
-            }
-        }
     }
 
     private val importContactActivityLauncher = registerForActivityResult(
@@ -101,11 +118,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun runAddPersonActivity(view: View?) {
-        val intent = Intent(this, AddPersonActivity::class.java)
-        addPersonActivityLauncher.launch(intent)
-    }
-
     private fun runAddPersonActivityFromImport(number: String, name: String) {
         val intent = Intent(this, AddPersonActivity::class.java)
         intent.putExtra("number", number)
@@ -113,19 +125,22 @@ class MainActivity : AppCompatActivity() {
         addPersonActivityLauncher.launch(intent)
     }
 
-    private val addPersonActivityLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) {
-        if (it.resultCode == Activity.RESULT_OK) {
-            Toast.makeText(this, "New person was added!", Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(this, "New person wasn't added.", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    fun displayPeople(view: View?) {
+    private fun printPeopleInConsole() {
         runBlocking {
             for (person in personDao.getAllPeople()) println(person)
         }
+    }
+
+    private fun clearDatabase() {
+        runBlocking {
+            personDao.nuke()
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (toggle.onOptionsItemSelected(item)) {
+            true
+        }
+        return super.onOptionsItemSelected(item)
     }
 }
