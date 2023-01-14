@@ -1,7 +1,10 @@
 package com.example.birthdaytracker
 
 import android.app.Activity
+import android.app.AlarmManager
 import android.app.AlertDialog
+import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
@@ -20,8 +23,10 @@ import com.example.birthdaytracker.dao.PersonDao
 import com.example.birthdaytracker.database.Database
 import com.example.birthdaytracker.databinding.ActivityMainBinding
 import com.example.birthdaytracker.model.Person
+import com.example.birthdaytracker.receiver.AlarmReceiver
 import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
+import java.util.*
 
 class MainActivity : AppCompatActivity(), OnItemClickListener {
     private lateinit var personDao: PersonDao
@@ -50,6 +55,26 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         }
 
         binding.recyclerView.adapter = ItemAdapter(this, people, this)
+
+        setupNotifications()
+    }
+
+    private fun setupNotifications() {
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.HOUR_OF_DAY, 8)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+        val intent = Intent(this, AlarmReceiver::class.java)
+        val pIntent = PendingIntent.getBroadcast(this, 0, intent, FLAG_IMMUTABLE)
+        alarmManager.setInexactRepeating(
+            AlarmManager.RTC_WAKEUP, calendar.timeInMillis,
+            AlarmManager.INTERVAL_HALF_DAY, pIntent
+        )
+        //        alarmManager.setInexactRepeating(
+        //            AlarmManager.ELAPSED_REALTIME_WAKEUP, 5000,
+        //            60000, pIntent
+        //        )
     }
 
     override fun onItemClick(position: Int) {
