@@ -6,20 +6,23 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.room.Room
+import com.example.birthdaytracker.adapter.ItemAdapter
+import com.example.birthdaytracker.adapter.OnItemClickListener
 import com.example.birthdaytracker.dao.PersonDao
 import com.example.birthdaytracker.database.Database
 import com.example.birthdaytracker.databinding.ActivityMainBinding
+import com.example.birthdaytracker.model.Person
 import kotlinx.coroutines.runBlocking
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnItemClickListener {
     private lateinit var personDao: PersonDao
     private lateinit var binding: ActivityMainBinding
     private lateinit var toggle: ActionBarDrawerToggle
+    private lateinit var people: List<Person>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +39,18 @@ class MainActivity : AppCompatActivity() {
         ).build()
 
         personDao = db.personDao()
+
+        runBlocking {
+            people = personDao.getAllPeople()
+        }
+
+        binding.recyclerView.adapter = ItemAdapter(this, people, this)
+    }
+
+    override fun onItemClick(position: Int) {
+        val intent = Intent(this, AddPersonActivity::class.java)
+        intent.putExtra("person", people.get(position))
+        addPersonActivityLauncher.launch(intent)
     }
 
     private fun ActivityMainBinding.setupNavigationMenu() {
@@ -77,9 +92,10 @@ class MainActivity : AppCompatActivity() {
         ActivityResultContracts.StartActivityForResult()
     ) {
         if (it.resultCode == Activity.RESULT_OK) {
-            Toast.makeText(this, "New person was added!", Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(this, "New person wasn't added.", Toast.LENGTH_SHORT).show()
+            runBlocking {
+                people = personDao.getAllPeople()
+            }
+            binding.recyclerView.swapAdapter(ItemAdapter(this, people, this), false)
         }
     }
 
