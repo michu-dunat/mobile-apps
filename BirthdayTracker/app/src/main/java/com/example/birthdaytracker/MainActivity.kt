@@ -54,6 +54,10 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
             people = personDao.getAllPeople()
         }
 
+        if (people.isEmpty()) {
+            binding.noPeoplePresent.visibility = View.VISIBLE
+        }
+
         binding.recyclerView.adapter = ItemAdapter(this, people, this)
 
         setupNotifications()
@@ -195,6 +199,11 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
                 people = personDao.getAllPeople()
             }
             updateRecyclerView()
+            if (people.isEmpty()) {
+                binding.noPeoplePresent.visibility = View.VISIBLE
+            } else {
+                binding.noPeoplePresent.visibility = View.INVISIBLE
+            }
         }
     }
 
@@ -250,6 +259,9 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         runBlocking {
             personDao.nuke()
         }
+        people = listOf()
+        updateRecyclerView()
+        binding.noPeoplePresent.visibility = View.VISIBLE
     }
 
     fun sortByNameDown(view: View?) {
