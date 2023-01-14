@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
                 builder.apply {
                     setPositiveButton("sms",
                         DialogInterface.OnClickListener { dialog, id ->
-                            // open sms intent
+                            openSmsIntentWithSelectedPersonAndWishes(position)
                         })
                     setNeutralButton("edit",
                         DialogInterface.OnClickListener { dialog, id ->
@@ -79,6 +79,19 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
             alertDialog?.show()
         } else {
             editPerson(position)
+        }
+    }
+
+    private fun openSmsIntentWithSelectedPersonAndWishes(position: Int) {
+        val intent = Intent(Intent.ACTION_SENDTO).apply {
+            data = Uri.parse("smsto:".plus(people[position].phoneNumber))
+            putExtra(
+                "sms_body",
+                getRandomWish()
+            )
+        }
+        if (intent.resolveActivity(packageManager) != null) {
+            startActivity(intent)
         }
     }
 
@@ -221,5 +234,18 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
             true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun getRandomWish(): String {
+        return arrayOf(
+            "Z okazji urodzin składam Ci moc życzeń: uśmiechu, zdrowia, radości, mnóstwa prezentów i gości, przyjaźni wielkich i małych, wielu przygód niebywałych i uśmiechu wesołego i wszystkiego, wszystkiego najlepszego!",
+            "Aby wszystkie fajne dni w żółwim tempie upływały, by co dzień uśmiechał się do Ciebie świat cały, by nigdy nie było porannej pobudki i wiał wiatr co rozwiewa smutki.",
+            "Bardzo wielkiego tortu urodzinowego, świeczek zapalonych, marzeń spełnionych, prezentów bez liku.",
+            "Bukiet najwspanialszych życzeń: uśmiechu i szczęścia, radości każdego dnia oraz wszelkiej pomyślności.",
+            "Jak najmniej trosk, słońca każdego ranka, dużo zdrowia i uśmiechu.",
+            "Jak strumyk bystrej wody po zielonej płynie niwie tak niech płynie wiek Twój młody mile i szczęśliwie.",
+            "Kolorowych snów, uśmiechu od ucha do ucha, pięknych bajek na dobranoc, własnego psa i kota, co dzień nowych przygód, butów siedmiomilowych, gwiazdki z nieba, wspaniałych przyjaciół i wesołej rodzinki.",
+            "Minęło już tyle lat, a my ciągle za pan brat. Pozwól, ze życzenia złoże, pieniędzy, miłości i więcej szczęścia w przyszłości."
+        ).random()
     }
 }
