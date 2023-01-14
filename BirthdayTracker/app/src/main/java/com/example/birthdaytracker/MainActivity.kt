@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
                         DialogInterface.OnClickListener { dialog, id ->
                             openSmsIntentWithSelectedPersonAndWishes(position)
                         })
-                    setNeutralButton("edit",
+                    setNeutralButton("Edycja",
                         DialogInterface.OnClickListener { dialog, id ->
                             editPerson(position)
                         })
@@ -98,7 +98,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
                             } else {
                                 Toast.makeText(
                                     this@MainActivity,
-                                    "E-mail is empty!",
+                                    "E-mail jest pusty!",
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
@@ -107,7 +107,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
 
                 builder
                     .setTitle(people[position].firstName.plus(" ").plus(people[position].lastName))
-                    .setMessage("What would you like to do?")
+                    .setMessage("Co chcesz zrobić?")
 
                 builder.create()
             }

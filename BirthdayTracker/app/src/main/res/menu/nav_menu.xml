@@ -3,14 +3,14 @@
 
     <item
         android:id="@+id/addPerson"
-        android:title="Add person" />
+        android:title="Dodaj osobę" />
     <item
         android:id="@+id/importPerson"
-        android:title="Import person from Contacts" />
+        android:title="Importuj dane z kontaktów" />
     <item
         android:id="@+id/printPeople"
         android:title="Print people to console" />
     <item
         android:id="@+id/clearDatabase"
-        android:title="Clear database" />
+        android:title="Wyczyść dane" />
 </menu>
