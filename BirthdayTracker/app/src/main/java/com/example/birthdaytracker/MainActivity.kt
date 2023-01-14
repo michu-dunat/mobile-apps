@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.provider.ContactsContract
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -67,6 +68,15 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
                     setNegativeButton("mail",
                         DialogInterface.OnClickListener { dialog, id ->
                             // open mail intent
+                            if (people[position].email != "") {
+                                openEmailIntentWithSelectedPersonAndWishes(position)
+                            } else {
+                                Toast.makeText(
+                                    this@MainActivity,
+                                    "E-mail is empty!",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         })
                 }
 
@@ -89,6 +99,18 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
                 "sms_body",
                 getRandomWish()
             )
+        }
+        if (intent.resolveActivity(packageManager) != null) {
+            startActivity(intent)
+        }
+    }
+
+    private fun openEmailIntentWithSelectedPersonAndWishes(position: Int) {
+        val intent = Intent(Intent.ACTION_SENDTO).apply {
+            data = Uri.parse("mailto:") // only email apps should handle this
+            putExtra(Intent.EXTRA_EMAIL, arrayOf(people[position].email))
+            putExtra(Intent.EXTRA_SUBJECT, "Wszystkiego najlepszego z okazji urodzin!")
+            putExtra(Intent.EXTRA_TEXT, getRandomWish())
         }
         if (intent.resolveActivity(packageManager) != null) {
             startActivity(intent)
