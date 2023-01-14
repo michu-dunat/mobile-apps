@@ -1,6 +1,8 @@
 package com.example.birthdaytracker
 
 import android.app.Activity
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -18,6 +20,7 @@ import com.example.birthdaytracker.database.Database
 import com.example.birthdaytracker.databinding.ActivityMainBinding
 import com.example.birthdaytracker.model.Person
 import kotlinx.coroutines.runBlocking
+import java.time.LocalDate
 
 class MainActivity : AppCompatActivity(), OnItemClickListener {
     private lateinit var personDao: PersonDao
@@ -49,10 +52,45 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
     }
 
     override fun onItemClick(position: Int) {
-        val intent = Intent(this, AddPersonActivity::class.java)
-        intent.putExtra("person", people.get(position))
+        if (isTodayBirthdayOfGivenPerson(position)) {
+            val alertDialog: AlertDialog? = this.let {
+                val builder = AlertDialog.Builder(it)
+                builder.apply {
+                    setPositiveButton("sms",
+                        DialogInterface.OnClickListener { dialog, id ->
+                            // open sms intent
+                        })
+                    setNeutralButton("edit",
+                        DialogInterface.OnClickListener { dialog, id ->
+                            editPerson(position)
+                        })
+                    setNegativeButton("mail",
+                        DialogInterface.OnClickListener { dialog, id ->
+                            // open mail intent
+                        })
+                }
+
+                builder
+                    .setTitle(people[position].firstName.plus(" ").plus(people[position].lastName))
+                    .setMessage("What would you like to do?")
+
+                builder.create()
+            }
+            alertDialog?.show()
+        } else {
+            editPerson(position)
+        }
+    }
+
+    private fun editPerson(position: Int) {
+        val intent = Intent(this@MainActivity, AddPersonActivity::class.java)
+        intent.putExtra("person", people[position])
         addPersonActivityLauncher.launch(intent)
     }
+
+    private fun isTodayBirthdayOfGivenPerson(position: Int) =
+        (people[position].birthday!!.split("-")[1].toInt() == LocalDate.now().monthValue
+                && people[position].birthday!!.split("-")[2].toInt() == LocalDate.now().dayOfMonth)
 
     private fun ActivityMainBinding.setupNavigationMenu() {
         toggle = ActionBarDrawerToggle(
@@ -155,12 +193,12 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
     }
 
     fun sortByNameDown(view: View?) {
-        people = people.sortedWith(compareBy({it.firstName}, {it.lastName}))
+        people = people.sortedWith(compareBy({ it.firstName }, { it.lastName }))
         updateRecyclerView()
     }
 
     fun sortByNameUp(view: View?) {
-        people = people.sortedWith(compareBy({it.firstName}, {it.lastName})).reversed()
+        people = people.sortedWith(compareBy({ it.firstName }, { it.lastName })).reversed()
         updateRecyclerView()
     }
 
