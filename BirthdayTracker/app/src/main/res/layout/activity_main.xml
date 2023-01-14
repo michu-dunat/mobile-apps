@@ -12,15 +12,76 @@
         android:layout_height="match_parent"
         android:id="@+id/constraintLayoutMainActivity">
 
+        <LinearLayout
+            android:id="@+id/linearLayoutMainActivity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@+id/guideline3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sort by name" />
+
+            <ImageView
+                android:id="@+id/sortByNameDown"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="sortByNameDown"
+                app:srcCompat="@drawable/ic_baseline_south_24"
+                app:tint="@color/white" />
+
+            <ImageView
+                android:id="@+id/sortByNameUp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="sortByNameUp"
+                app:srcCompat="@drawable/ic_baseline_north_24"
+                app:tint="@color/white" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sort by birthday date" />
+
+            <ImageView
+                android:id="@+id/sortByDateDown"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="sortByBirthdayDown"
+                app:srcCompat="@drawable/ic_baseline_south_24"
+                app:tint="@color/white" />
+
+            <ImageView
+                android:id="@+id/sortByDateUp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="sortByBirthdayUp"
+                app:srcCompat="@drawable/ic_baseline_north_24"
+                app:tint="@color/white" />
+        </LinearLayout>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
             app:layoutManager="LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/guideline3" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.05" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.navigation.NavigationView
@@ -31,4 +92,5 @@
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/nav_menu" />
+
 </androidx.drawerlayout.widget.DrawerLayout>

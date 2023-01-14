@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.view.MenuItem
+import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -95,7 +96,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
             runBlocking {
                 people = personDao.getAllPeople()
             }
-            binding.recyclerView.swapAdapter(ItemAdapter(this, people, this), false)
+            updateRecyclerView()
         }
     }
 
@@ -151,6 +152,30 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         runBlocking {
             personDao.nuke()
         }
+    }
+
+    fun sortByNameDown(view: View?) {
+        people = people.sortedWith(compareBy({it.firstName}, {it.lastName}))
+        updateRecyclerView()
+    }
+
+    fun sortByNameUp(view: View?) {
+        people = people.sortedWith(compareBy({it.firstName}, {it.lastName})).reversed()
+        updateRecyclerView()
+    }
+
+    fun sortByBirthdayUp(view: View?) {
+        people = people.sortedBy { it.birthday }
+        updateRecyclerView()
+    }
+
+    fun sortByBirthdayDown(view: View?) {
+        people = people.sortedByDescending { it.birthday }
+        updateRecyclerView()
+    }
+
+    private fun updateRecyclerView() {
+        binding.recyclerView.swapAdapter(ItemAdapter(this, people, this), false)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
