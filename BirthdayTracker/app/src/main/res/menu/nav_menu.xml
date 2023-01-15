@@ -8,9 +8,9 @@
         android:id="@+id/importPerson"
         android:title="Importuj dane z kontaktów" />
     <item
-        android:id="@+id/printPeople"
-        android:title="Print people to console" />
-    <item
         android:id="@+id/clearDatabase"
         android:title="Wyczyść dane" />
+    <item
+        android:id="@+id/exportToCalendar"
+        android:title="Eksportuj do kalendarza" />
 </menu>

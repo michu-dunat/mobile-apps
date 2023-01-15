@@ -1,14 +1,18 @@
 package com.example.birthdaytracker
 
+import android.Manifest
 import android.app.Activity
 import android.app.AlarmManager
 import android.app.AlertDialog
 import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_IMMUTABLE
+import android.content.ContentValues
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.provider.CalendarContract
 import android.provider.ContactsContract
 import android.view.MenuItem
 import android.view.View
@@ -16,6 +20,8 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.room.Room
 import com.example.birthdaytracker.adapter.ItemAdapter
 import com.example.birthdaytracker.adapter.OnItemClickListener
@@ -175,11 +181,11 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
                 R.id.importPerson -> {
                     importContact()
                 }
-                R.id.printPeople -> {
-                    printPeopleInConsole()
-                }
                 R.id.clearDatabase -> {
                     clearDatabase()
+                }
+                R.id.exportToCalendar -> {
+                    exportBirthdaysToCalendar()
                 }
             }
             true
@@ -242,17 +248,86 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         }
     }
 
+    private fun manageWriteCalendarPermission() {
+        val permission = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.WRITE_CALENDAR
+        )
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.WRITE_CALENDAR),
+                1
+            )
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>, grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+
+    private fun exportBirthdaysToCalendar() {
+        manageWriteCalendarPermission()
+
+        val permission = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.WRITE_CALENDAR
+        )
+
+        if (permission == PackageManager.PERMISSION_GRANTED) {
+            insertEventsIntoCalendarForEachPerson()
+            Toast.makeText(this, "Wyeksportowano wydarzenia do kalendarza :)", Toast.LENGTH_SHORT)
+                .show()
+        } else {
+            Toast.makeText(this, "Aplikacja nie ma dostępu do kalendarza!", Toast.LENGTH_SHORT)
+                .show()
+        }
+    }
+
+    private fun insertEventsIntoCalendarForEachPerson() {
+        for (person in people) {
+            val calID: Long = 1
+            val startMillis: Long = Calendar.getInstance().run {
+                set(
+                    LocalDate.now().year,
+                    person.birthday!!.split("-")[1].toInt() - 1,
+                    person.birthday.split("-")[2].toInt(),
+                    6,
+                    0
+                )
+                timeInMillis
+            }
+
+            val values = ContentValues().apply {
+                put(CalendarContract.Events.DTSTART, startMillis)
+                put(CalendarContract.Events.RRULE, "FREQ=YEARLY")
+                put(CalendarContract.Events.DURATION, "PT1H")
+                put(CalendarContract.Events.TITLE, "Urodziny")
+                put(
+                    CalendarContract.Events.DESCRIPTION,
+                    person.firstName.plus(" ").plus(person.lastName)
+                        .plus(" obchodzi dzisiaj urodziny!")
+                )
+                put(CalendarContract.Events.CALENDAR_ID, calID)
+                put(
+                    CalendarContract.Events.EVENT_TIMEZONE,
+                    TimeZone.getDefault().id
+                )
+            }
+            contentResolver.insert(CalendarContract.Events.CONTENT_URI, values)
+        }
+    }
+
     private fun runAddPersonActivityFromImport(number: String, name: String) {
         val intent = Intent(this, AddPersonActivity::class.java)
         intent.putExtra("number", number)
         intent.putExtra("name", name)
         addPersonActivityLauncher.launch(intent)
-    }
-
-    private fun printPeopleInConsole() {
-        runBlocking {
-            for (person in personDao.getAllPeople()) println(person)
-        }
     }
 
     private fun clearDatabase() {
