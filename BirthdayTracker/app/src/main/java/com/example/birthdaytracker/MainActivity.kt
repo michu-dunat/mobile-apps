@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
 
     private fun setupNotifications() {
         val calendar = Calendar.getInstance()
-        calendar.set(Calendar.HOUR_OF_DAY, 8)
+        calendar.set(Calendar.HOUR_OF_DAY, 4)
         calendar.set(Calendar.MINUTE, 0)
         calendar.set(Calendar.SECOND, 0)
         val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
