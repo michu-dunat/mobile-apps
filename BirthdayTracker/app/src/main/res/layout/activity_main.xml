@@ -22,6 +22,11 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -33,20 +38,21 @@
                 android:layout_height="wrap_content"
                 android:onClick="sortByNameDown"
                 app:srcCompat="@drawable/ic_baseline_south_24"
-                app:tint="@color/white" />
+                app:tint="@color/purple_200" />
 
             <ImageView
                 android:id="@+id/sortByNameUp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="sortByNameUp"
+                android:paddingEnd="5dp"
                 app:srcCompat="@drawable/ic_baseline_north_24"
-                app:tint="@color/white" />
+                app:tint="@color/purple_200" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sort po datach" />
+                android:text="Sortuj po datach" />
 
             <ImageView
                 android:id="@+id/sortByDateDown"
@@ -54,21 +60,22 @@
                 android:layout_height="wrap_content"
                 android:onClick="sortByBirthdayDown"
                 app:srcCompat="@drawable/ic_baseline_south_24"
-                app:tint="@color/white" />
+                app:tint="@color/purple_200" />
 
             <ImageView
                 android:id="@+id/sortByDateUp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="sortByBirthdayUp"
+                android:paddingEnd="5dp"
                 app:srcCompat="@drawable/ic_baseline_north_24"
-                app:tint="@color/white" />
+                app:tint="@color/purple_200" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_margin="10dp"
             app:layoutManager="LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"

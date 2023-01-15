@@ -44,6 +44,8 @@ class ItemAdapter(
         if (isTodayBirthdayOfGivenPerson(position)
         ) {
             holder.cake.visibility = View.VISIBLE
+        } else {
+            holder.cake.visibility = View.INVISIBLE
         }
     }
 
